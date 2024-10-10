@@ -1,0 +1,29 @@
+<!-- Replace ::text:: with your code -->
+
+<div class="title">{{ title }}</div>
+<div class="course-info">
+  <div class="course-info__description">{{ description }}</div>
+  <div class="course-info__info">
+    <div>
+      <b>ID: </b><span class="course-info__info-id">{{ id }}</span>
+    </div>
+    <div>
+      <b>Duration: </b
+      ><span class="course-info__info-duration">{{ duration }}</span>
+    </div>
+    <div>
+      <b>Created: </b
+      ><span class="course-info__info-date">{{
+        creationDate | date : "mediumDate"
+      }}</span>
+    </div>
+    <div *ngFor="let author of authors; let last = last">
+      <b>Authors: </b
+      ><span class="course-info__info-authors">{{ author }}</span>
+      <span *ngIf="!last">, </span>
+    </div>
+  </div>
+</div>
+<div class="navigation-block">
+  <app-button [buttonText]="'Back'"></app-button>
+</div>
