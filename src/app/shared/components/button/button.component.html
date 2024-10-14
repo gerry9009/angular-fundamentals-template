@@ -1,4 +1,4 @@
-<div class="app-button">
+<div class="app-button" (click)="onClick()">
   <!-- Replace the text below with your code -->
   <fa-icon *ngIf="selectedIcon" [icon]="selectedIcon"></fa-icon>
   <ng-container *ngIf="buttonText">{{ buttonText }}</ng-container>
