@@ -9,10 +9,9 @@ export class SearchComponent {
   @Input() placeholder = "Input Text";
   @Output() search = new EventEmitter<string>();
 
-  searchText = "";
+  searchQuery = "";
 
   onSubmit() {
-    this.search.emit(this.searchText);
-    console.log(this.searchText);
+    this.search.emit(this.searchQuery);
   }
 }

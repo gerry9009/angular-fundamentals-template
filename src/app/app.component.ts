@@ -9,4 +9,8 @@ export class AppComponent {
   title = "courses-app";
 
   user = "Harry Potter";
+
+  handleSearch(query: string) {
+    console.log(query);
+  }
 }
