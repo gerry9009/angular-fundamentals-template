@@ -1,7 +1,7 @@
-@import 'src/app/shared/styles/styles';
+@import "src/app/shared/styles/styles";
 
 .course {
- min-width: 60vw;
+  min-width: 60vw;
 
   &__flex {
     display: flex;
@@ -34,4 +34,16 @@
     margin-left: 4px;
     cursor: pointer;
   }
+
+  &__authors {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+li {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 }

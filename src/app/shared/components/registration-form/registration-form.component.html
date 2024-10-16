@@ -17,7 +17,7 @@
           >
         </ng-container>
         <ng-container *ngIf="getError('name', 'minlength')">
-          <span id="nameErrorMessage" class="text-danger"
+          <span id="nameErrorMessage_2" class="text-danger"
             >The name is too short.</span
           >
         </ng-container>
@@ -37,7 +37,9 @@
           >
         </ng-container>
         <ng-container *ngIf="getError('email', 'email')">
-          <span id="emailErrorMessage" class="text-danger">Invalid email.</span>
+          <span id="emailErrorMessage_2" class="text-danger"
+            >Invalid email.</span
+          >
         </ng-container>
       </div>
       <div class="form__control">
