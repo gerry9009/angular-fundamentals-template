@@ -50,7 +50,10 @@
           />
 
           <ng-container
-            *ngIf="isSubmitted && loginForm.controls['password'].invalid"
+            *ngIf="
+              (isSubmitted || loginForm.controls['password']?.touched) &&
+              loginForm.controls['password'].invalid
+            "
           >
             <span id="passwordErrorMessage" class="text-danger"
               >Password is required.</span

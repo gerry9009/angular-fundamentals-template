@@ -30,6 +30,7 @@
           id="email"
           placeholder="Input text"
           formControlName="email"
+          emailValidator
         />
         <ng-container *ngIf="getError('email', 'required')">
           <span id="emailErrorMessage" class="text-danger"

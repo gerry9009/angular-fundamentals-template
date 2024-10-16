@@ -12,9 +12,7 @@ export class SearchComponent {
   searchText = "";
 
   onSubmit() {
-    if (this.searchText.length >= 2) {
-      this.search.emit(this.searchText);
-      console.log(this.searchText);
-    }
+    this.search.emit(this.searchText);
+    console.log(this.searchText);
   }
 }
