@@ -1,5 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
+import { Router } from "@angular/router";
+import { AuthService } from "@app/auth/services/auth.service";
 
 @Component({
   selector: "app-registration-form",
@@ -9,6 +11,10 @@ import { FormControl, FormGroup, Validators } from "@angular/forms";
 export class RegistrationFormComponent implements OnInit {
   registrationForm!: FormGroup;
   isSubmitted = false;
+
+  errorMessage: string[] | null = null;
+
+  constructor(private router: Router, private authService: AuthService) {}
 
   ngOnInit(): void {
     this.registrationForm = new FormGroup({
@@ -32,10 +38,18 @@ export class RegistrationFormComponent implements OnInit {
     this.isSubmitted = true;
 
     if (this.registrationForm.valid) {
-      console.log("Form is valid and submitted.");
-      console.log(this.registrationForm.value);
-    } else {
-      console.log("Form is invalid.");
+      const user = this.registrationForm.value;
+
+      this.authService.register(user).subscribe({
+        next: () => {
+          this.authService
+            .login(user)
+            .subscribe(() => this.router.navigate(["/courses"]));
+        },
+        error: (error) => {
+          this.errorMessage = error.error.errors;
+        },
+      });
     }
   }
 }

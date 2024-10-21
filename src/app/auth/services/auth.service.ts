@@ -41,14 +41,7 @@ export class AuthService {
   }
 
   register(user: User): Observable<any> {
-    return this.http.post(`${this.API_URL}/register`, user).pipe(
-      tap((response: any) => {
-        if (response.token) {
-          this.sessionStorageService.setToken(response.token);
-          this.isAuthorized$$.next(true);
-        }
-      })
-    );
+    return this.http.post(`${this.API_URL}/register`, user);
   }
 
   get isAuthorised(): boolean {
