@@ -1,42 +1,119 @@
-import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { SessionStorageService } from "@app/auth/services/session-storage.service";
+import { map, Observable } from "rxjs";
+
+interface Course {
+  id?: string;
+  title: string;
+  description: string;
+  creationDate?: string;
+  duration: number;
+  authors: string[];
+}
+
+interface Author {
+  id: string;
+  name: string;
+}
+
+interface ApiResponse<T> {
+  successful: boolean;
+  result: T;
+}
 
 @Injectable({
-    providedIn: 'root'
+  providedIn: "root",
 })
 export class CoursesService {
-    getAll() {
-        // Add your code here
-    }
+  private URL = "http://localhost:4000";
 
-    createCourse(course: any) { // replace 'any' with the required interface
-        // Add your code here
-    }
+  constructor(
+    private http: HttpClient,
+    private sessionStorageService: SessionStorageService
+  ) {}
 
-    editCourse(id: string, course: any) { // replace 'any' with the required interface
-        // Add your code here
-    }
+  getAll(): Observable<Course[]> {
+    return this.http
+      .get<ApiResponse<Course[]>>(`${this.URL}/courses/all`)
+      .pipe(map((response) => response.result));
+  }
 
-    getCourse(id: string) {
-        // Add your code here
-    }
+  createCourse(course: Course): Observable<Course> {
+    const token = this.sessionStorageService.getToken();
+    const headers = new HttpHeaders({
+      Authorization: `${token}`,
+      "Content-Type": "application/json",
+    });
 
-    deleteCourse(id: string) {
-        // Add your code here
-    }
+    return this.http
+      .post<ApiResponse<Course>>(`${this.URL}/courses/add`, course, { headers })
+      .pipe(map((response) => response.result));
+  }
 
-    filterCourses(value: string) {
-        // Add your code here
-    }
+  editCourse(id: string, course: Course): Observable<Course> {
+    const token = this.sessionStorageService.getToken();
+    const headers = new HttpHeaders({
+      Authorization: `${token}`,
+      "Content-Type": "application/json",
+    });
 
-    getAllAuthors() {
-        // Add your code here
-    }
+    return this.http
+      .put<ApiResponse<Course>>(`${this.URL}/courses/${id}`, course, {
+        headers,
+      })
+      .pipe(map((response) => response.result));
+  }
 
-    createAuthor(name: string) {
-        // Add your code here
-    }
+  getCourse(id: string): Observable<Course> {
+    return this.http
+      .get<ApiResponse<Course>>(`${this.URL}/courses/${id}`)
+      .pipe(map((response) => response.result));
+  }
 
-    getAuthorById(id: string) {
-        // Add your code here
-    }
+  deleteCourse(id: string): Observable<void> {
+    const token = this.sessionStorageService.getToken();
+    const headers = new HttpHeaders({
+      Authorization: `${token}`,
+      "Content-Type": "application/json",
+    });
+
+    return this.http
+      .delete<ApiResponse<void>>(`${this.URL}/courses/${id}`, { headers })
+      .pipe(map((response) => response.result));
+  }
+
+  filterCourses(value: string): Observable<Course[]> {
+    return this.http
+      .get<ApiResponse<Course[]>>(`${this.URL}/courses/filter?title=${value}`)
+      .pipe(map((response) => response.result));
+  }
+
+  getAllAuthors(): Observable<Author[]> {
+    return this.http
+      .get<ApiResponse<Author[]>>(`${this.URL}/authors/all`)
+      .pipe(map((response) => response.result));
+  }
+
+  createAuthor(name: string): Observable<Author> {
+    const token = this.sessionStorageService.getToken();
+    const headers = new HttpHeaders({
+      Authorization: `${token}`,
+      "Content-Type": "application/json",
+    });
+
+    return this.http
+      .post<ApiResponse<Author>>(
+        `${this.URL}/authors/add`,
+        { name },
+        { headers }
+      )
+      .pipe(map((response) => response.result));
+  }
+
+  getAuthorById(id: string): Observable<Author> {
+    return this.http
+      .get<ApiResponse<Author>>(`${this.URL}/authors/${id}`)
+      .pipe(map((response) => response.result));
+  }
 }

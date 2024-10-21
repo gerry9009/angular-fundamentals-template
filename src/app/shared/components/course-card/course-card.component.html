@@ -1,15 +1,14 @@
 <div class="course-card">
   <div class="course-card__description">
-    <!-- Replace ::text:: with your code -->
-    <div class="course-card__description-title">{{ title }}</div>
-    <div class="course-card__description-text">{{ description }}</div>
+    <div class="course-card__description-title">{{ course?.title }}</div>
+    <div class="course-card__description-text">{{ course?.description }}</div>
   </div>
   <div class="course-card__info">
     <div class="course-card__info-text">
       <div>
         <b>Authors: </b>
-        <ng-container *ngFor="let author of authors; let last = last">
-          <span>{{ author }}</span>
+        <ng-container *ngFor="let author of course?.authors; let last = last">
+          <span>{{ getAuthor(author) }}</span>
           <span *ngIf="!last">, </span>
         </ng-container>
       </div>

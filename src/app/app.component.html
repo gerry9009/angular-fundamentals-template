@@ -1,17 +1,18 @@
 <app-header>
-  <ng-container *ngIf="user; else loggedOut">
-    <p>{{ user }}</p>
-    <app-button [buttonText]="'logout'"></app-button>
+  <ng-container *ngIf="name; else loggedOut">
+    <p>{{ name }}</p>
+    <app-button
+      [buttonText]="'logout'"
+      [routerLink]="['/login']"
+      (buttonClick)="logout()"
+    ></app-button>
   </ng-container>
   <ng-template #loggedOut>
-    <app-button [buttonText]="'Login'"></app-button>
+    <app-button [buttonText]="'Login'" [routerLink]="['/login']"></app-button>
   </ng-template>
 </app-header>
 
 <div class="app-root">
-  <!-- Search component -->
-  <!-- <app-search (search)="handleSearch($event)"></app-search> -->
-
   <!-- Info component -->
   <!-- <app-info
     [title]="'Your List is Empty'"

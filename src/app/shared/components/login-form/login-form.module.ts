@@ -6,7 +6,7 @@ import { RouterModule, Routes } from "@angular/router";
 const routes: Routes = [{ path: "", component: LoginFormComponent }];
 
 @NgModule({
-  declarations: [],
+  // declarations: [LoginFormComponent],
   imports: [SharedModule, RouterModule.forChild(routes)],
 })
 export class LoginModule {}

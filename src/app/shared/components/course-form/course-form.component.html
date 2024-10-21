@@ -1,2 +1,6 @@
-<h2>Create / Edit Course</h2>
-<app-course [authorsList]="initAuthors"></app-course>
+<h2>{{ isCreate ? "Create" : "Edit" }} course</h2>
+<app-course
+  [authorsList]="authors"
+  [course]="course"
+  [isCreate]="isCreate"
+></app-course>

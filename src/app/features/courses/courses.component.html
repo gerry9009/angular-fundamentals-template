@@ -1,1 +1,16 @@
-<p>courses works!</p>
+<h1>Courses</h1>
+<app-search (search)="onSearch($event)"></app-search>
+<app-courses-list
+  [courses]="courses"
+  [editable]="isAdmin"
+  (showCourse)="handleShow($event)"
+  (editCourse)="handleEdit($event)"
+  (deleteCourse)="handleDelete($event)"
+></app-courses-list>
+
+<ng-container *ngIf="isAdmin">
+  <app-button
+    [buttonText]="'add new course'"
+    (buttonClick)="handleAddCourse()"
+  ></app-button>
+</ng-container>

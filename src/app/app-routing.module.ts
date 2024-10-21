@@ -1,17 +1,13 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
-import {
-  CourseCardComponent,
-  CourseFormComponent,
-  LoginFormComponent,
-  RegistrationFormComponent,
-} from "./shared/components";
-import { CoursesComponent } from "./features/courses/courses.component";
+import { AuthorizedGuard } from "./auth/guards/authorized.guard";
+import { NotAuthorizedGuard } from "./auth/guards/not-authorized.guard";
 
 export const routes: Routes = [
   /* Add your code here */
   {
     path: "login",
+    canActivate: [NotAuthorizedGuard],
     loadChildren: () =>
       import("./shared/components/login-form/login-form.module").then(
         (m) => m.LoginModule
@@ -19,6 +15,7 @@ export const routes: Routes = [
   },
   {
     path: "registration",
+    canActivate: [NotAuthorizedGuard],
     loadChildren: () =>
       import(
         "./shared/components/registration-form/registration-form.module"
@@ -26,6 +23,7 @@ export const routes: Routes = [
   },
   {
     path: "courses",
+    canLoad: [AuthorizedGuard],
     loadChildren: () =>
       import("./features/courses/courses.module").then((m) => m.CoursesModule),
   },
@@ -33,12 +31,6 @@ export const routes: Routes = [
     path: "**",
     redirectTo: "courses",
   },
-
-  //   { path: "registration", component: RegistrationFormComponent },
-  //   { path: "", component: CoursesComponent },
-  //   { path: "courses/add", component: CourseFormComponent },
-  //   { path: "courses/:id", component: CourseCardComponent },
-  //   { path: "courses/edit/:id", component: CourseFormComponent },
 ];
 
 @NgModule({

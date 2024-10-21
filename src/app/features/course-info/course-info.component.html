@@ -1,11 +1,11 @@
 <!-- Replace ::text:: with your code -->
 
-<div class="title">{{ title }}</div>
+<div class="title">{{ course?.title }}</div>
 <div class="course-info">
-  <div class="course-info__description">{{ description }}</div>
+  <div class="course-info__description">{{ course?.description }}</div>
   <div class="course-info__info">
     <div>
-      <b>ID: </b><span class="course-info__info-id">{{ id }}</span>
+      <b>ID: </b><span class="course-info__info-id">{{ course?.id }}</span>
     </div>
     <div>
       <b>Duration: </b
@@ -17,13 +17,15 @@
         creationDate | customDate
       }}</span>
     </div>
-    <div *ngFor="let author of authors; let last = last">
-      <b>Authors: </b
-      ><span class="course-info__info-authors">{{ author }}</span>
-      <span *ngIf="!last">, </span>
+    <div>
+      <b>Authors: </b>
+      <ng-container *ngFor="let author of course?.authors; let last = last">
+        <span class="course-info__info-authors">{{ getAuthor(author) }}</span>
+        <span *ngIf="!last">, </span>
+      </ng-container>
     </div>
   </div>
 </div>
 <div class="navigation-block">
-  <app-button [buttonText]="'Back'"></app-button>
+  <app-button [buttonText]="'Back'" (buttonClick)="onClick()"></app-button>
 </div>

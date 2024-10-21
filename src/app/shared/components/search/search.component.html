@@ -4,6 +4,7 @@
     name="search"
     [placeholder]="placeholder"
     [(ngModel)]="searchQuery"
+    (input)="search.emit(searchQuery)"
   />
   <app-button [buttonText]="'search'" (buttonClick)="onSubmit()"></app-button>
 </form>

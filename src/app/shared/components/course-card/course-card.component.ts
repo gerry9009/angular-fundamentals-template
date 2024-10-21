@@ -1,23 +1,58 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { CoursesStoreService } from "@app/services/courses-store.service";
 
-import { mockedCoursesList } from "../../mocks/mocks";
+interface Course {
+  id: string;
+  title: string;
+  description: string;
+  creationDate: string;
+  duration: number;
+  authors: string[];
+}
+
+interface Author {
+  id: string;
+  name: string;
+}
 
 @Component({
   selector: "app-course-card",
   templateUrl: "./course-card.component.html",
   styleUrls: ["./course-card.component.scss"],
 })
-export class CourseCardComponent {
+export class CourseCardComponent implements OnInit {
   @Input() editable: boolean = true;
+  @Input() course: Course | null = null;
   @Output() clickOnShow = new EventEmitter();
 
-  title: string = mockedCoursesList[1].title;
-  description: string = mockedCoursesList[1].description;
-  creationDate: Date = new Date(mockedCoursesList[1].creationDate);
-  duration: number = mockedCoursesList[1].duration;
-  authors: string[] = mockedCoursesList[1].authors;
+  creationDate: Date = new Date(0);
+  duration: number = 0;
+
+  authors: Author[] = [];
+
+  constructor(private coursesStoreService: CoursesStoreService) {}
+
+  ngOnInit(): void {
+    if (this.course) {
+      this.creationDate = new Date(this.course.creationDate);
+      this.duration = this.course.duration;
+    }
+
+    this.initAuthors();
+  }
 
   handleClickOnShow() {
-    this.clickOnShow.emit();
+    this.clickOnShow.emit(this.course?.id);
+  }
+
+  initAuthors() {
+    this.coursesStoreService.getAllAuthors();
+    this.coursesStoreService.authors$.subscribe((authors) => {
+      this.authors = authors;
+    });
+  }
+
+  getAuthor(id: string) {
+    return this.authors.find((author) => author.id === id)?.name;
   }
 }

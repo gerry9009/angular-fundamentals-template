@@ -1,7 +1,11 @@
 import { Component, OnInit } from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
+import { CoursesStoreService } from "@app/services/courses-store.service";
 
-//TEST purpose
-import { mockedAuthorsList } from "@app/shared/mocks/mocks";
+interface Author {
+  id: string;
+  name: string;
+}
 
 @Component({
   selector: "app-course-form",
@@ -9,14 +13,39 @@ import { mockedAuthorsList } from "@app/shared/mocks/mocks";
   styleUrls: ["./course-form.component.scss"],
 })
 export class CourseFormComponent implements OnInit {
-  initAuthors = mockedAuthorsList;
+  authors: Author[] = [];
+  course = null;
 
-  // constructor(public fb: FormBuilder, public library: FaIconLibrary) {
-  //   library.addIconPacks(fas);
-  // }
-  // courseForm!: FormGroup;
+  isCreate = true;
 
-  //TODO if add a course -> change the authors list -> id => author object
+  constructor(
+    private route: ActivatedRoute,
+    private coursesStoreService: CoursesStoreService
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.initCourse();
+    this.initAuthors();
+  }
+
+  initCourse() {
+    this.route.params.subscribe((params) => {
+      const courseId = params["id"];
+
+      if (courseId) {
+        this.isCreate = false;
+
+        this.coursesStoreService.getCourse(courseId).subscribe((course) => {
+          this.course = course;
+        });
+      }
+    });
+  }
+
+  initAuthors() {
+    this.coursesStoreService.getAllAuthors();
+    this.coursesStoreService.authors$.subscribe((authors) => {
+      this.authors = authors;
+    });
+  }
 }

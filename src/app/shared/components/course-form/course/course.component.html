@@ -161,7 +161,7 @@
         ></app-button>
 
         <app-button
-          [buttonText]="'Create Course'"
+          [buttonText]="isCreate ? 'create course' : 'edit course'"
           (buttonClick)="onSubmit()"
         ></app-button>
       </div>
