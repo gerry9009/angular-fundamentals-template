@@ -1,44 +1,47 @@
 <app-header>
-  <ng-container *ngIf="user; else loggedOut">
-    <p>{{ user }}</p>
-    <app-button [buttonText]="'logout'"></app-button>
+  <ng-container *ngIf="name; else loggedOut">
+    <p>{{ name }}</p>
+    <app-button
+      [buttonText]="'logout'"
+      [routerLink]="['/login']"
+      (buttonClick)="logout()"
+    ></app-button>
   </ng-container>
   <ng-template #loggedOut>
-    <app-button [buttonText]="'Login'"></app-button>
+    <app-button [buttonText]="'Login'" [routerLink]="['/login']"></app-button>
   </ng-template>
 </app-header>
 
 <div class="app-root">
-  <!-- Search component -->
-  <app-search (search)="handleSearch($event)"></app-search>
-
   <!-- Info component -->
-  <app-info
+  <!-- <app-info
     [title]="'Your List is Empty'"
     [text]="'Please use \'Add New Course button\' to add your first course'"
   >
     <app-button [buttonText]="'Add new course'"> </app-button>
-  </app-info>
+  </app-info> -->
 
   <!-- Course Card component -->
-  <app-course-card [editable]="false">
+  <!-- <app-course-card [editable]="false">
     <app-button [iconName]="'trash'"></app-button>
     <app-button [iconName]="'pencil'"></app-button>
-  </app-course-card>
+  </app-course-card> -->
 
-  <app-courses-list></app-courses-list>
+  <!-- <app-courses-list></app-courses-list> -->
 
-  <app-course-info></app-course-info>
-
-  <!-- Login Form component -->
-  <app-login-form></app-login-form>
+  <!-- <app-course-info></app-course-info> -->
 
   <!-- Login Form component -->
-  <app-registration-form></app-registration-form>
+  <!-- <app-login-form></app-login-form> -->
 
   <!-- Login Form component -->
-  <app-course-form></app-course-form>
+  <!-- <app-registration-form></app-registration-form> -->
 
+  <!-- Login Form component -->
+  <!-- <app-course-form></app-course-form> -->
+
+  <!-- Setup router -->
+  <router-outlet></router-outlet>
   <!-- Modal component -->
   <!-- <app-modal [message]="'Message'" [title]="'Title'" [okButtonText]="'Ok'" [cancelButtonText]="'Cancel'"></app-modal> -->
 </div>

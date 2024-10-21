@@ -1,4 +1,10 @@
-import { Component, Input, OnInit } from "@angular/core";
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+} from "@angular/core";
 import {
   FormArray,
   FormBuilder,
@@ -6,6 +12,8 @@ import {
   FormGroup,
   Validators,
 } from "@angular/forms";
+import { Router } from "@angular/router";
+import { CoursesStoreService } from "@app/services/courses-store.service";
 
 interface Author {
   id: string;
@@ -13,12 +21,12 @@ interface Author {
 }
 
 interface Course {
-  id: string;
+  id?: string;
   title: string;
   description: string;
-  creationDate: string;
+  creationDate?: string;
   duration: number;
-  authors: Author[];
+  authors: string[];
 }
 
 @Component({
@@ -26,14 +34,19 @@ interface Course {
   templateUrl: "./course.component.html",
   styleUrls: ["./course.component.scss"],
 })
-export class CourseComponent implements OnInit {
+export class CourseComponent implements OnInit, OnChanges {
   @Input() authorsList: Author[] = [];
   @Input() course: Course | null = null;
+  @Input() isCreate = true;
 
   isSubmitted = false;
   isPushedAddedButton = false;
 
-  constructor(public fb: FormBuilder) {}
+  constructor(
+    public fb: FormBuilder,
+    private router: Router,
+    private coursesStoreService: CoursesStoreService
+  ) {}
   courseForm!: FormGroup;
 
   textValidator = Validators.compose([
@@ -42,6 +55,31 @@ export class CourseComponent implements OnInit {
   ]);
 
   ngOnInit(): void {
+    this.initForm();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes) {
+      this.initForm();
+    }
+  }
+
+  initForm() {
+    let selectedAuthorsList: Author[] = [];
+    let availableAuthors: Author[] = this.authorsList;
+
+    if (this.course?.authors.length) {
+      selectedAuthorsList = this.course.authors
+        .map((id) => {
+          return availableAuthors.find((author) => author.id === id);
+        })
+        .filter((author) => author !== undefined) as Author[];
+
+      availableAuthors = availableAuthors.filter(
+        (author) => !this.course?.authors.includes(author.id)
+      );
+    }
+
     this.courseForm = this.fb.group({
       title: new FormControl(this.course?.title || "", this.textValidator),
       description: new FormControl(
@@ -52,9 +90,9 @@ export class CourseComponent implements OnInit {
         Validators.minLength(2),
         Validators.pattern("^[a-zA-Z0-9 ]*$"),
       ]),
-      authors: new FormArray(this.createAuthorFormArray(this.authorsList)),
+      authors: new FormArray(this.createAuthorFormArray(availableAuthors)),
       selectedAuthors: new FormArray(
-        this.createAuthorFormArray(this.course?.authors || []),
+        this.createAuthorFormArray(selectedAuthorsList),
         Validators.required
       ),
       duration: new FormControl(this.course?.duration || "", [
@@ -62,10 +100,6 @@ export class CourseComponent implements OnInit {
         Validators.min(0),
       ]),
     });
-  }
-
-  createAuthorFormArray(authors: Author[]): FormControl[] {
-    return authors.map((author) => new FormControl(author));
   }
 
   getError(path: string, errorName: string) {
@@ -78,17 +112,16 @@ export class CourseComponent implements OnInit {
     return formControl.errors?.[errorName];
   }
 
+  createAuthorFormArray(authors: Author[]): FormControl[] {
+    return authors.map((author) => new FormControl(author));
+  }
+
   createAuthor() {
     this.isPushedAddedButton = true;
     const author = this.courseForm.get("newAuthor") as FormControl;
 
     if (author?.valid && author?.value) {
-      const newAuthor: Author = {
-        id: crypto.randomUUID(),
-        name: author.value,
-      };
-      const authorsArray = this.courseForm.get("authors") as FormArray;
-      authorsArray.push(new FormControl(newAuthor));
+      this.coursesStoreService.createAuthor(author.value);
 
       this.courseForm.get("newAuthor")?.reset();
       this.isPushedAddedButton = false;
@@ -114,15 +147,7 @@ export class CourseComponent implements OnInit {
   }
 
   deleteAuthor(id: Author["id"]) {
-    const authorsArray = this.courseForm.get("authors") as FormArray;
-
-    const index = authorsArray.controls.findIndex(
-      (author) => author.value.id === id
-    );
-
-    if (index !== -1) {
-      authorsArray.removeAt(index);
-    }
+    console.log("Delete Author: ", id);
   }
 
   removeAuthor(id: Author["id"]) {
@@ -144,17 +169,29 @@ export class CourseComponent implements OnInit {
   }
 
   onCancel() {
-    console.log("Return");
+    this.router.navigate([`/courses`]);
   }
 
   onSubmit() {
     this.isSubmitted = true;
 
     if (this.courseForm.valid) {
-      console.log("Form is valid and submitted.");
-      console.log(this.courseForm.value);
-    } else {
-      console.log("Form is invalid.");
+      const formValue = this.courseForm.value;
+
+      const course: Course = {
+        title: formValue.title,
+        description: formValue.description,
+        duration: formValue.duration,
+        authors: formValue.selectedAuthors.map((author: Author) => author.id),
+      };
+
+      if (this.isCreate) {
+        this.coursesStoreService.createCourse(course);
+      } else if (this.course?.id) {
+        this.coursesStoreService.editCourse(this.course.id, course);
+      }
+
+      this.router.navigate([`/courses`]);
     }
   }
 }

@@ -8,17 +8,20 @@ import { NotAuthorizedGuard } from "@app/auth/guards/not-authorized.guard";
 import { AuthorizedGuard } from "@app/auth/guards/authorized.guard";
 import { CoursesStoreService } from "@app/services/courses-store.service";
 import { CoursesService } from "@app/services/courses.service";
-import { CoursesComponent } from "./features/courses/courses.component";
-import { CoursesListComponent } from "./features/courses/courses-list/courses-list.component";
+import { AppRoutingModule } from "./app-routing.module";
+import { HttpClientModule } from "@angular/common/http";
+import { CoursesModule } from "./features/courses/courses.module";
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    CourseInfoComponent,
-    CoursesComponent,
-    CoursesListComponent,
+  declarations: [AppComponent, CourseInfoComponent],
+  imports: [
+    BrowserModule,
+    SharedModule,
+    FontAwesomeModule,
+    AppRoutingModule,
+    HttpClientModule,
+    CoursesModule,
   ],
-  imports: [BrowserModule, SharedModule, FontAwesomeModule],
   providers: [
     AuthorizedGuard,
     NotAuthorizedGuard,
