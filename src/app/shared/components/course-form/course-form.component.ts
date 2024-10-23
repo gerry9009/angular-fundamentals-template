@@ -29,8 +29,6 @@ export class CourseFormComponent implements OnInit {
   ngOnInit(): void {
     this.initCourse();
     this.initAuthors();
-
-    console.log("FORM");
   }
 
   initCourse() {

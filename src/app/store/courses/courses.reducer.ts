@@ -34,6 +34,7 @@ export const coursesReducer = createReducer(
     ...state,
     isAllCoursesLoading: false,
     allCourses: [...courses],
+    errorMessage: null,
   })),
   on(CoursesActions.requestAllCoursesFail, (state, { error }) => ({
     ...state,
@@ -51,6 +52,7 @@ export const coursesReducer = createReducer(
     ...state,
     isSingleCourseLoading: false,
     course: course,
+    errorMessage: null,
   })),
   on(CoursesActions.requestSingleCourseFail, (state, { error }) => ({
     ...state,
@@ -68,6 +70,7 @@ export const coursesReducer = createReducer(
     ...state,
     isAllCoursesLoading: false,
     allCourses: [...state.allCourses, course],
+    errorMessage: null,
   })),
   on(CoursesActions.requestCreateCourseFail, (state, { error }) => ({
     ...state,
@@ -76,15 +79,18 @@ export const coursesReducer = createReducer(
   })),
 
   // Edit courses
-  on(CoursesActions.requestEditCourse, (state) => ({
+  on(CoursesActions.requestEditCourse, (state, { course }) => ({
     ...state,
     isAllCoursesLoading: true,
+    course: course,
     errorMessage: null,
   })),
   on(CoursesActions.requestEditCourseSuccess, (state, { course }) => ({
     ...state,
     isAllCoursesLoading: false,
     allCourses: state.allCourses.map((c) => (c.id === course.id ? course : c)),
+    errorMessage: null,
+    course: course,
   })),
   on(CoursesActions.requestEditCourseFail, (state, { error }) => ({
     ...state,
@@ -102,6 +108,7 @@ export const coursesReducer = createReducer(
     ...state,
     isAllCoursesLoading: false,
     allCourses: state.allCourses.filter((course) => course.id !== id),
+    errorMessage: null,
   })),
   on(CoursesActions.requestDeleteCourseFail, (state, { error }) => ({
     ...state,
@@ -112,16 +119,20 @@ export const coursesReducer = createReducer(
   // Filter courses
   on(CoursesActions.requestFilteredCourses, (state) => ({
     ...state,
+    isAllCoursesLoading: true,
     isSearchState: true,
     errorMessage: null,
   })),
   on(CoursesActions.requestFilteredCoursesSuccess, (state, { courses }) => ({
     ...state,
+    isAllCoursesLoading: false,
     isSearchState: false,
     allCourses: [...courses],
+    errorMessage: null,
   })),
   on(CoursesActions.requestFilteredCoursesFail, (state, { error }) => ({
     ...state,
+    isAllCoursesLoading: false,
     isSearchState: false,
     errorMessage: error,
   }))
