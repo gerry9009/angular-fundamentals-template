@@ -1,13 +1,15 @@
 import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { CoursesStoreService } from "@app/services/courses-store.service";
+// import { CoursesStoreService } from "@app/services/courses-store.service";
 import { UserStoreService } from "@app/user/services/user-store.service";
 
+import { CoursesStateFacade } from "@app/store/courses/courses.facade";
+
 interface Course {
-  id: string;
+  id?: string;
   title: string;
   description: string;
-  creationDate: string;
+  creationDate?: string;
   duration: number;
   authors: string[];
 }
@@ -23,7 +25,7 @@ export class CoursesComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private coursesStoreService: CoursesStoreService,
+    private coursesFacade: CoursesStateFacade,
     private userStoreService: UserStoreService
   ) {}
 
@@ -33,8 +35,9 @@ export class CoursesComponent implements OnInit {
   }
 
   loadCourses() {
-    this.coursesStoreService.getAll();
-    this.coursesStoreService.courses$.subscribe((courses) => {
+    this.coursesFacade.getAllCourses();
+
+    this.coursesFacade.courses$.subscribe((courses) => {
       this.courses = courses;
     });
   }
@@ -48,7 +51,7 @@ export class CoursesComponent implements OnInit {
 
   onSearch(searchQuery: string) {
     if (searchQuery) {
-      this.coursesStoreService.filterCourses(searchQuery);
+      this.coursesFacade.getFilteredCourses(searchQuery);
     } else {
       this.loadCourses();
     }
@@ -63,7 +66,7 @@ export class CoursesComponent implements OnInit {
   }
 
   handleDelete(id: string) {
-    this.coursesStoreService.deleteCourse(id);
+    this.coursesFacade.deleteCourse(id);
   }
 
   handleAddCourse() {

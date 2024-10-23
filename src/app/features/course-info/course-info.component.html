@@ -1,11 +1,14 @@
 <!-- Replace ::text:: with your code -->
 
-<div class="title">{{ course?.title }}</div>
+<div class="title">{{ (course$ | async)?.title }}</div>
 <div class="course-info">
-  <div class="course-info__description">{{ course?.description }}</div>
+  <div class="course-info__description">
+    {{ (course$ | async)?.description }}
+  </div>
   <div class="course-info__info">
     <div>
-      <b>ID: </b><span class="course-info__info-id">{{ course?.id }}</span>
+      <b>ID: </b
+      ><span class="course-info__info-id">{{ (course$ | async)?.id }}</span>
     </div>
     <div>
       <b>Duration: </b
@@ -19,7 +22,9 @@
     </div>
     <div>
       <b>Authors: </b>
-      <ng-container *ngFor="let author of course?.authors; let last = last">
+      <ng-container
+        *ngFor="let author of (course$ | async)?.authors; let last = last"
+      >
         <span class="course-info__info-authors">{{ getAuthor(author) }}</span>
         <span *ngIf="!last">, </span>
       </ng-container>

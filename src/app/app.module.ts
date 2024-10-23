@@ -11,6 +11,10 @@ import { CoursesService } from "@app/services/courses.service";
 import { AppRoutingModule } from "./app-routing.module";
 import { HttpClientModule } from "@angular/common/http";
 import { CoursesModule } from "./features/courses/courses.module";
+// NGRX
+import { StoreModule } from "@ngrx/store";
+import { EffectsModule } from "@ngrx/effects";
+import { reducers, effects } from "./store";
 
 @NgModule({
   declarations: [AppComponent, CourseInfoComponent],
@@ -21,6 +25,9 @@ import { CoursesModule } from "./features/courses/courses.module";
     AppRoutingModule,
     HttpClientModule,
     CoursesModule,
+    // NGRX
+    StoreModule.forRoot(reducers),
+    EffectsModule.forRoot(effects),
   ],
   providers: [
     AuthorizedGuard,

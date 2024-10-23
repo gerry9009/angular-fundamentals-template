@@ -1,13 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
-
-interface Course {
-  id: string;
-  title: string;
-  description: string;
-  creationDate: string;
-  duration: number;
-  authors: string[];
-}
+import { Course } from "@app/store/courses.model";
 
 @Component({
   selector: "app-courses-list",
@@ -24,15 +16,21 @@ export class CoursesListComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  handleShowCourse(courseId: string) {
-    this.showCourse.emit(courseId);
+  handleShowCourse(courseId?: string) {
+    if (courseId) {
+      this.showCourse.emit(courseId);
+    }
   }
 
-  handleEditCourse(courseId: string) {
-    this.editCourse.emit(courseId);
+  handleEditCourse(courseId?: string) {
+    if (courseId) {
+      this.editCourse.emit(courseId);
+    }
   }
 
-  handleDeleteCourse(courseId: string) {
-    this.deleteCourse.emit(courseId);
+  handleDeleteCourse(courseId?: string) {
+    if (courseId) {
+      this.deleteCourse.emit(courseId);
+    }
   }
 }

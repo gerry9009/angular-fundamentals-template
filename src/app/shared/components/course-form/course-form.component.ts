@@ -1,6 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { CoursesStoreService } from "@app/services/courses-store.service";
+import { Course } from "@app/store/courses.model";
+import { CoursesStateFacade } from "@app/store/courses/courses.facade";
 
 interface Author {
   id: string;
@@ -14,13 +16,14 @@ interface Author {
 })
 export class CourseFormComponent implements OnInit {
   authors: Author[] = [];
-  course = null;
+  course: Course | null = null;
 
   isCreate = true;
 
   constructor(
     private route: ActivatedRoute,
-    private coursesStoreService: CoursesStoreService
+    private coursesStoreService: CoursesStoreService,
+    private coursesFacade: CoursesStateFacade
   ) {}
 
   ngOnInit(): void {
@@ -35,7 +38,9 @@ export class CourseFormComponent implements OnInit {
       if (courseId) {
         this.isCreate = false;
 
-        this.coursesStoreService.getCourse(courseId).subscribe((course) => {
+        this.coursesFacade.getSingleCourse(courseId);
+
+        this.coursesFacade.course$.subscribe((course) => {
           this.course = course;
         });
       }
