@@ -14,19 +14,12 @@ import {
 } from "@angular/forms";
 import { Router } from "@angular/router";
 import { CoursesStoreService } from "@app/services/courses-store.service";
+import { Course } from "@app/store/courses.model";
+import { CoursesStateFacade } from "@app/store/courses/courses.facade";
 
 interface Author {
   id: string;
   name: string;
-}
-
-interface Course {
-  id?: string;
-  title: string;
-  description: string;
-  creationDate?: string;
-  duration: number;
-  authors: string[];
 }
 
 @Component({
@@ -45,7 +38,8 @@ export class CourseComponent implements OnInit, OnChanges {
   constructor(
     public fb: FormBuilder,
     private router: Router,
-    private coursesStoreService: CoursesStoreService
+    private coursesStoreService: CoursesStoreService,
+    private coursesFacade: CoursesStateFacade
   ) {}
   courseForm!: FormGroup;
 
@@ -186,9 +180,9 @@ export class CourseComponent implements OnInit, OnChanges {
       };
 
       if (this.isCreate) {
-        this.coursesStoreService.createCourse(course);
+        this.coursesFacade.createCourse(course);
       } else if (this.course?.id) {
-        this.coursesStoreService.editCourse(this.course.id, course);
+        this.coursesFacade.editCourse(this.course.id, course);
       }
 
       this.router.navigate([`/courses`]);

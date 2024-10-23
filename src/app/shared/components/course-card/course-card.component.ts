@@ -1,14 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { CoursesStoreService } from "@app/services/courses-store.service";
-
-interface Course {
-  id: string;
-  title: string;
-  description: string;
-  creationDate: string;
-  duration: number;
-  authors: string[];
-}
+import { Course } from "@app/store/courses.model";
 
 interface Author {
   id: string;
@@ -34,7 +26,9 @@ export class CourseCardComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.course) {
-      this.creationDate = new Date(this.course.creationDate);
+      if (this.course.creationDate) {
+        this.creationDate = new Date(this.course.creationDate);
+      }
       this.duration = this.course.duration;
     }
 

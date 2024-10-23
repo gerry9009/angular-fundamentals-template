@@ -1,15 +1,9 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { CoursesStoreService } from "@app/services/courses-store.service";
-
-interface Course {
-  id: string;
-  title: string;
-  description: string;
-  creationDate: string;
-  duration: number;
-  authors: string[];
-}
+import { Course } from "@app/store/courses.model";
+import { CoursesStateFacade } from "@app/store/courses/courses.facade";
+import { Observable } from "rxjs";
 
 interface Author {
   id: string;
@@ -22,7 +16,8 @@ interface Author {
   styleUrls: ["./course-info.component.scss"],
 })
 export class CourseInfoComponent implements OnInit {
-  course: Course | null = null;
+  //course: Course | null = null;
+  course$: Observable<Course | null> = this.coursesFacade.course$;
   authors: Author[] = [];
 
   creationDate: Date = new Date(0);
@@ -31,7 +26,9 @@ export class CourseInfoComponent implements OnInit {
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private coursesStoreService: CoursesStoreService
+    private coursesStoreService: CoursesStoreService,
+
+    private coursesFacade: CoursesStateFacade
   ) {}
 
   ngOnInit(): void {
@@ -43,11 +40,15 @@ export class CourseInfoComponent implements OnInit {
     this.route.params.subscribe((params) => {
       const courseId = params["id"];
 
-      this.coursesStoreService.getCourse(courseId).subscribe((course) => {
-        this.course = course;
+      this.coursesFacade.getSingleCourse(courseId);
 
-        this.creationDate = new Date(course.creationDate);
-        this.duration = course.duration;
+      this.course$.subscribe((course) => {
+        if (course) {
+          if (course.creationDate) {
+            this.creationDate = new Date(course.creationDate);
+            this.duration = course.duration;
+          }
+        }
       });
     });
   }
